@@ -82,14 +82,25 @@ def main():
 
     print(f"Testing Data Size: {x_test.shape}")
 
-    #Training Model
-    model=LinearRegression()
-    model.fit(x_train,y_train)
+        # Training Model
+    model = LinearRegression()
+    model.fit(x_train, y_train)
+
     predictions = model.predict(x_test)
-    print(predictions)
+
+    # Comparing model predictions to the actual real-world values
+    actual_wins = y_test.head(3).values
+    predicted_wins = predictions[:3]
+
+    for i in range(3):
+        predicted = round(predicted_wins[i])
+        actual = actual_wins[i]
+        difference = abs(actual - predicted)
+
+        print(f"Model Guessed: {predicted}")
+        print(f"Real Answer: {actual}")
+        print(f"Difference: {difference}")
 
 
 if __name__ == "__main__":
     main()
-
-    #Multicollinearity
