@@ -61,7 +61,7 @@ def main():
     df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
     df[['Sex']] = imputer.fit_transform(df[['Sex']])
 
-    # ---------------- Feature Selection ----------------
+    # Feature selection
 
     features_to_test = ['Pclass', 'Sex', 'Age', 'Fare']
 
