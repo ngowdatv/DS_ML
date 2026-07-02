@@ -6,6 +6,10 @@ from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSe
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
@@ -206,6 +210,31 @@ optuna_prediction = best_model.predict(x_test)
 
 print("Accuracy:", accuracy_score(y_test, optuna_prediction))
 
+ros = RandomOverSampler(random_state=42)
+x_resampled, y_resampled = ros.fit_resample(x_train, y_train)
+
+rus = RandomUnderSampler(random_state=42)
+x_undersampled, y_undersampled = rus.fit_resample(x_train, y_train)
+
+smote = SMOTE(random_state=42)
+x_smote, y_smote = smote.fit_resample(x_train, y_train)
+
+print("\nAfter Random Oversampling")
+print(y_resampled.value_counts())
+
+print("\nAfter Random Undersampling")
+print(y_undersampled.value_counts())
+
+print("\nAfter SMOTE")
+print(y_smote.value_counts())
+
+prob = model.predict_proba(x_test)[:, 1]
+threshold=0.40
+predictions=(prob>=threshold).astype(int)
+
+for threshold in [0.5,0.4,0.2]:
+    predictions=(prob>=threshold).astype(int)
+    print(precision_score(y_test,predictions))
 
 disp.plot(cmap="Blues")
 plt.title("Confusion Matrix")
