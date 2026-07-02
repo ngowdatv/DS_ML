@@ -1,4 +1,5 @@
 import pandas as pd
+import shap
 import optuna
 import numpy as np
 import matplotlib.pyplot as plt
@@ -236,6 +237,38 @@ for threshold in [0.5,0.4,0.2]:
     predictions=(prob>=threshold).astype(int)
     print(precision_score(y_test,predictions))
 
+explainer=shap.TreeExplainer(best_model)
+shap_values=explainer.shap_values(x_test)
+
+shap.summary_plot(
+    shap_values,
+    x_test,
+    feature_names=x.columns
+)
+
+# ==========================
+# SHAP Feature Importance Plot (Horizontal Bar Plot)
+# ==========================
+
+import shap
+import matplotlib.pyplot as plt
+
+explainer = shap.TreeExplainer(best_model)
+shap_values = explainer.shap_values(x_test)
+
+plt.figure(figsize=(10, 8))
+
+shap.summary_plot(
+    shap_values,
+    x_test,
+    feature_names=x_test.columns,
+    plot_type="bar",
+    show=False
+)
+
+plt.title("SHAP Feature Importance")
+plt.tight_layout()
+plt.show()
 disp.plot(cmap="Blues")
 plt.title("Confusion Matrix")
 plt.show()
